@@ -18,6 +18,9 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
+    // Quando o usuario logan na aoplicação ele recebe um token, e atraves do token ele chama os endpoints da classe AuthenticationController
+    // os post e os getter
+
     @PostMapping
     public ResponseEntity postProduct(@RequestBody @Valid ProductRequestDTO body){
         Product newProduct = new Product(body);
