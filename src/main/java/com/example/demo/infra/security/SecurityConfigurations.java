@@ -15,25 +15,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity // habilita a configuração
-public class SecurityConfigurations {
 
+@Configuration
+@EnableWebSecurity
+public class SecurityConfigurations {
     @Autowired
     SecurityFilter securityFilter;
 
     // declarando a corrente de filtros para a nossa aplicação
     @Bean // para que o spring consiga instanciar a classe
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+        return  httpSecurity
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // declarando quais são as requisições http que vai ser autorizadas, autenticadas
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // para o endpoint de autenticação, para todos conseguirem fazer
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
-                        .anyRequest().authenticated() // tirando o post, os outros usuarios podem fazer todas as requis ições
+                        .anyRequest().authenticated() // tirando o post, os outros usuarios podem fazer todas as requisições
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
